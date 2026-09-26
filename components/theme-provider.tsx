@@ -1,16 +1,16 @@
 "use client"
 
-import * as React from "react"
 import { ThemeProvider as NextThemesProvider, useTheme } from "next-themes"
+import { ComponentProps, useEffect } from "react"
 
-function ThemeProvider({
+const  ThemeProvider=({
   children,
   ...props
-}: React.ComponentProps<typeof NextThemesProvider>) {
+}: ComponentProps<typeof NextThemesProvider>) =>{
   return (
     <NextThemesProvider
       attribute="class"
-      defaultTheme="system"
+      defaultTheme="dark"
       enableSystem
       disableTransitionOnChange
       {...props}
@@ -21,7 +21,7 @@ function ThemeProvider({
   )
 }
 
-function isTypingTarget(target: EventTarget | null) {
+const isTypingTarget=(target: EventTarget | null) =>{
   if (!(target instanceof HTMLElement)) {
     return false
   }
@@ -34,11 +34,11 @@ function isTypingTarget(target: EventTarget | null) {
   )
 }
 
-function ThemeHotkey() {
+const ThemeHotkey = () => {
   const { resolvedTheme, setTheme } = useTheme()
 
-  React.useEffect(() => {
-    function onKeyDown(event: KeyboardEvent) {
+  useEffect(() => {
+    const onKeyDown=(event: KeyboardEvent) =>{
       if (event.defaultPrevented || event.repeat) {
         return
       }
