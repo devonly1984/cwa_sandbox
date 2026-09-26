@@ -1,10 +1,11 @@
+import { ClerkProvider } from "@clerk/nextjs"
+import { shadcn } from "@clerk/ui/themes"
 import "./globals.css"
 import { ThemeProvider } from "@/components/theme-provider"
 import { fontMono, geist } from "@/lib/constants/fonts"
 import { cn } from "@/lib/utils"
 import { Metadata } from "next"
 import { ReactNode } from "react"
-
 
 export const metadata: Metadata = {
   title: {
@@ -31,7 +32,11 @@ const RootLayout = ({
       )}
     >
       <body>
-        <ThemeProvider>{children}</ThemeProvider>
+        <ClerkProvider appearance={{ theme: shadcn }}>
+          <ThemeProvider>
+            {children}
+          </ThemeProvider>
+        </ClerkProvider>
       </body>
     </html>
   )

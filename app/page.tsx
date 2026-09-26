@@ -5,12 +5,16 @@ import {
   EmptyMedia,
   EmptyTitle,
 } from "@/components/ui/empty"
+import { UserButton } from "@clerk/nextjs"
+import { auth } from "@clerk/nextjs/server"
 import Image from "next/image"
 
-const Page=()=> {
+const Page = async () => {
+  await auth.protect({unauthenticatedUrl: "/sign-in"})
+
   return (
-    <div className="flex min-h-svh">
-      <Empty>
+    <div className="flex min-h-svh flex-col items-center justify-center gap-6">
+      <Empty className="flex-none">
         <EmptyHeader>
           <EmptyMedia>
             <Image src="/logo.svg" alt="logo" width={48} height={48} />
@@ -26,6 +30,7 @@ const Page=()=> {
           own words. If you can describe it, you can play it.
         </EmptyDescription>
       </Empty>
+      <UserButton />
     </div>
   )
 }
