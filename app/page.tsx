@@ -5,7 +5,7 @@ import {
   EmptyMedia,
   EmptyTitle,
 } from "@/components/ui/empty"
-import { UserButton } from "@clerk/nextjs"
+import { OrganizationSwitcher, UserButton } from "@clerk/nextjs"
 import { auth } from "@clerk/nextjs/server"
 import Image from "next/image"
 
@@ -31,6 +31,7 @@ const Page = async () => {
         </EmptyDescription>
       </Empty>
       <UserButton />
+      <OrganizationSwitcher />
     </div>
   )
 }
