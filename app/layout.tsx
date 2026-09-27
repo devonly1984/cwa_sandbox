@@ -1,8 +1,8 @@
 import { ClerkProvider } from "@clerk/nextjs"
 import { shadcn } from "@clerk/ui/themes"
 import "./globals.css"
-import { ThemeProvider } from "@/components/theme-provider"
-import { fontMono, geist } from "@/lib/constants/fonts"
+import { ThemeProvider } from "@/components/providers/ThemeProvider"
+import { fontMono, geist, fontLogo } from "@/lib/constants/fonts"
 import { cn } from "@/lib/utils"
 import { Metadata } from "next"
 import { ReactNode } from "react"
@@ -28,7 +28,8 @@ const RootLayout = ({
         "antialiased",
         fontMono.variable,
         "font-sans",
-        geist.variable
+        geist.variable,
+        fontLogo.variable
       )}
     >
       <body>

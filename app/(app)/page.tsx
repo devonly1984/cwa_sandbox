@@ -1,11 +1,12 @@
 import {
   Empty,
+  EmptyContent,
   EmptyDescription,
   EmptyHeader,
   EmptyMedia,
   EmptyTitle,
 } from "@/components/ui/empty"
-import { OrganizationSwitcher, UserButton } from "@clerk/nextjs"
+import { ChatComposer } from "@/components/ChatComposer"
 import { auth } from "@clerk/nextjs/server"
 import Image from "next/image"
 
@@ -29,9 +30,10 @@ const Page = async () => {
           Build your own racers, shooters, puzzles and whole worlds using your
           own words. If you can describe it, you can play it.
         </EmptyDescription>
+        <EmptyContent className="max-w-5xl">
+          <ChatComposer />
+        </EmptyContent>
       </Empty>
-      <UserButton />
-      <OrganizationSwitcher />
     </div>
   )
 }
