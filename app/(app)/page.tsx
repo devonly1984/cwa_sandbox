@@ -6,9 +6,10 @@ import {
   EmptyMedia,
   EmptyTitle,
 } from "@/components/ui/empty"
-import { ChatComposer } from "@/components/ChatComposer"
+import { NewGameComposer } from "@/components/chat/NewGameComposer"
 import { auth } from "@clerk/nextjs/server"
 import Image from "next/image"
+import SuggestionsView from "@/components/chat/SuggestionsView"
 
 const Page = async () => {
   await auth.protect({unauthenticatedUrl: "/sign-in"})
@@ -30,8 +31,10 @@ const Page = async () => {
           Build your own racers, shooters, puzzles and whole worlds using your
           own words. If you can describe it, you can play it.
         </EmptyDescription>
-        <EmptyContent className="max-w-5xl">
-          <ChatComposer />
+        <EmptyContent className="max-w-2xl gap-6">
+          <NewGameComposer />
+          <SuggestionsView/>
+
         </EmptyContent>
       </Empty>
     </div>

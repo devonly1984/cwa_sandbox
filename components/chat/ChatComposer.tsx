@@ -1,5 +1,4 @@
-"use client"
-
+import { type FormEvent } from "react"
 import { ArrowUp, ChevronDown, Grip } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
@@ -15,13 +14,30 @@ import {
   InputGroupButton,
   InputGroupTextarea,
 } from "@/components/ui/input-group"
-import { suggestions } from "@/lib/constants/suggestions"
-import { createGame } from "@/lib/games/actions"
 
-const ChatComposer = () => {
+type ChatComposerProps = {
+  value: string
+  onValueChange: (value: string) => void
+  onSubmit: (value: string) => void | Promise<void>
+  disabled?: boolean
+  submitLabel?: string
+}
+
+const ChatComposer = ({
+  value,
+  onValueChange,
+  onSubmit,
+  disabled = false,
+  submitLabel = "Create game",
+}: ChatComposerProps) => {
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault()
+    await onSubmit(value)
+  }
+
   return (
     <div className="flex w-full flex-col gap-6">
-      <form action={createGame}>
+      <form onSubmit={handleSubmit} className="w-full">
         <InputGroup className="bg-popover">
           <InputGroupTextarea
             aria-label="Describe the game you want to build"
@@ -30,6 +46,9 @@ const ChatComposer = () => {
             placeholder="Describe the game you want to build..."
             rows={1}
             required
+            disabled={disabled}
+            value={value}
+            onChange={(event) => onValueChange(event.target.value)}
           />
           <InputGroupAddon align="block-end">
             <DropdownMenu>
@@ -51,30 +70,17 @@ const ChatComposer = () => {
               </DropdownMenuContent>
             </DropdownMenu>
             <Button
-              aria-label="Create game"
+              aria-label={submitLabel}
               className="ml-auto rounded-full"
               size="icon-lg"
               type="submit"
+              disabled={disabled}
             >
               <ArrowUp aria-hidden="true" />
             </Button>
           </InputGroupAddon>
         </InputGroup>
       </form>
-
-      <div className="flex flex-wrap justify-center gap-2">
-        {suggestions.map((suggestion) => (
-          <Button
-            key={suggestion.label}
-            variant={"outline"}
-            size="sm"
-            className={"rounded-full font-normal text-muted-foreground"}
-          >
-            <suggestion.icon />
-            {suggestion.label}
-          </Button>
-        ))}
-      </div>
     </div>
   )
 }
