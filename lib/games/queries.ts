@@ -7,7 +7,10 @@ import { db } from "@/lib/db"
 import { games } from "@/lib/db/schema"
 
 export type GameListItem = Pick<typeof games.$inferSelect, "id" | "title">
-export type GameDetail = Pick<typeof games.$inferSelect, "id" | "title" | "messages">
+export type GameDetail = Pick<
+  typeof games.$inferSelect,
+  "id" | "title" | "messages" | "lastEventId"
+>
 
 export async function listGames(): Promise<GameListItem[]> {
   const { userId, orgId } = await auth()
@@ -31,7 +34,12 @@ export async function getGame(id: string): Promise<GameDetail | null> {
   }
 
   const [game] = await db
-    .select({ id: games.id, title: games.title, messages: games.messages })
+    .select({
+      id: games.id,
+      title: games.title,
+      messages: games.messages,
+      lastEventId: games.lastEventId,
+    })
     .from(games)
     .where(and(eq(games.id, id), eq(games.orgId, orgId)))
     .limit(1)

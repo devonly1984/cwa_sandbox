@@ -1,5 +1,5 @@
 import { type FormEvent } from "react"
-import { ArrowUp, ChevronDown, Grip } from "lucide-react"
+import { ArrowUp, ChevronDown, Grip, Square } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
 import {
@@ -20,6 +20,8 @@ type ChatComposerProps = {
   onValueChange: (value: string) => void
   onSubmit: (value: string) => void | Promise<void>
   disabled?: boolean
+  isSending?: boolean
+  onStop?: () => void
   submitLabel?: string
 }
 
@@ -28,6 +30,8 @@ const ChatComposer = ({
   onValueChange,
   onSubmit,
   disabled = false,
+  isSending = false,
+  onStop,
   submitLabel = "Create game",
 }: ChatComposerProps) => {
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
@@ -46,7 +50,7 @@ const ChatComposer = ({
             placeholder="Describe the game you want to build..."
             rows={1}
             required
-            disabled={disabled}
+            disabled={disabled || isSending}
             value={value}
             onChange={(event) => onValueChange(event.target.value)}
           />
@@ -70,13 +74,18 @@ const ChatComposer = ({
               </DropdownMenuContent>
             </DropdownMenu>
             <Button
-              aria-label={submitLabel}
+              aria-label={isSending ? "Stop generating" : submitLabel}
               className="ml-auto rounded-full"
               size="icon-lg"
-              type="submit"
+              type={isSending ? "button" : "submit"}
               disabled={disabled}
+              onClick={isSending ? onStop : undefined}
             >
-              <ArrowUp aria-hidden="true" />
+              {isSending ? (
+                <Square aria-hidden="true" fill="currentColor" />
+              ) : (
+                <ArrowUp aria-hidden="true" />
+              )}
             </Button>
           </InputGroupAddon>
         </InputGroup>

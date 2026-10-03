@@ -12,7 +12,9 @@
     "typecheck": "tsc --noEmit",
     "db:generate": "drizzle-kit generate",
     "db:push": "drizzle-kit push",
-    "db:studio": "drizzle-kit studio"
+    "db:studio": "drizzle-kit studio",
+    "trigger:dev": "trigger dev",
+    "trigger:deploy": "trigger deploy"
   },
   "dependencies": {
     "@ai-sdk/anthropic": "^4.0.65",
@@ -24,6 +26,7 @@
     "@neon/env": "^1.4.7",
     "@neondatabase/serverless": "^1.1.0",
     "@shadcn/react": "^0.3.1",
+    "@trigger.dev/sdk": "4.7.2",
     "ai": "^7.0.118",
     "class-variance-authority": "^0.7.1",
     "cmdk": "^1.1.1",
@@ -46,6 +49,7 @@
   "devDependencies": {
     "@next/env": "^16.3.6",
     "@tailwindcss/postcss": "^4",
+    "@trigger.dev/build": "4.7.2",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
@@ -55,6 +59,7 @@
     "prettier": "^3.9.6",
     "prettier-plugin-tailwindcss": "^0.8.1",
     "tailwindcss": "^4",
+    "trigger.dev": "^4.7.2",
     "typescript": "^5"
   }
 }

@@ -1,11 +1,18 @@
 "use client"
 
-import { useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import Image from "next/image"
+import { useRouter } from "next/navigation"
 import { useChat } from "@ai-sdk/react"
-import { DefaultChatTransport, type UIMessage } from "ai"
+import { useTriggerChatTransport } from "@trigger.dev/sdk/chat/react"
+import type { UIMessage } from "ai"
 
+import {
+  mintGameChatAccessToken,
+  startGameChatSession,
+} from "@/app/actions"
 import { ChatComposer } from "@/components/chat/ChatComposer"
+import type { gameChat } from "@/trigger/chat"
 import {
   Bubble,
   BubbleContent,
@@ -30,17 +37,50 @@ import {
 type ChatThreadProps = {
   gameId: string
   initialMessages: UIMessage[]
+  initialSession?: { publicAccessToken: string; lastEventId?: string }
+  initialPrompt?: string
 }
 
-const ChatThread = ({ gameId, initialMessages }: ChatThreadProps) => {
+const ChatThread = ({
+  gameId,
+  initialMessages,
+  initialSession,
+  initialPrompt,
+}: ChatThreadProps) => {
+  const router = useRouter()
+  const initialPromptSent = useRef(false)
   const [value, setValue] = useState("")
-  const { messages, sendMessage, status, error } = useChat({
+  const transport = useTriggerChatTransport<typeof gameChat>({
+    task: "game-chat",
+    accessToken: ({ chatId }) => mintGameChatAccessToken(chatId),
+    startSession: ({ chatId }) => startGameChatSession({ chatId }),
+    sessions: initialSession ? { [gameId]: initialSession } : undefined,
+  })
+  const { messages, sendMessage, stop, status, error } = useChat({
     id: gameId,
     messages: initialMessages,
-    transport: new DefaultChatTransport({ api: "/api/chat" }),
+    transport,
+    resume: initialMessages.length > 0,
   })
 
+  useEffect(() => {
+    const text = initialPrompt?.trim()
+
+    if (!text || initialPromptSent.current) {
+      return
+    }
+
+    initialPromptSent.current = true
+    void sendMessage({ text })
+    router.replace(`/games/${gameId}`, { scroll: false })
+  }, [gameId, initialPrompt, router, sendMessage])
+
   const isSending = status === "submitted" || status === "streaming"
+
+  const handleStop = () => {
+    stop()
+    void transport.stopGeneration(gameId)
+  }
 
   const handleSubmit = (message: string) => {
     const text = message.trim()
@@ -128,7 +168,8 @@ const ChatThread = ({ gameId, initialMessages }: ChatThreadProps) => {
           value={value}
           onValueChange={setValue}
           onSubmit={handleSubmit}
-          disabled={isSending}
+          isSending={isSending}
+          onStop={handleStop}
           submitLabel="Send message"
         />
       </div>

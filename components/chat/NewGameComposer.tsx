@@ -1,23 +1,41 @@
 "use client"
-import { useState } from "react"
+import { useState, useTransition } from "react"
+import { useRouter } from "next/navigation"
 import { ChatComposer } from "./ChatComposer"
 import { createGame } from "@/lib/games/actions"
 
 const NewGameComposer = () => {
-  const [value, setValue] = useState("")
+  const router = useRouter()
+  const [prompt, setPrompt] = useState("")
+  const [isPending,startTransaction]= useTransition()
 
-  const createNewGame = async (title: string) => {
-    const formData = new FormData()
-    formData.set("title", title)
-    await createGame(formData)
-    setValue("")
+  const handleSubmit =  (value: string) => {
+    const trimmedPrompt = value.trim()
+
+    if (!trimmedPrompt) {
+      return
+    }
+
+    startTransaction(async()=>{
+      const gameId = await createGame(trimmedPrompt)
+
+      if (!gameId) {
+        return
+      }
+
+      setPrompt("")
+      router.push(`/games/${gameId}?prompt=${encodeURIComponent(trimmedPrompt)}`)
+    })
+    
   }
+  
 
   return (
     <ChatComposer
-      value={value}
-      onValueChange={setValue}
-      onSubmit={createNewGame}
+      value={prompt}
+      onValueChange={setPrompt}
+      onSubmit={handleSubmit}
+      disabled={isPending}
     />
   )
 }

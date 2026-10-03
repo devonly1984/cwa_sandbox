@@ -8,6 +8,7 @@ export const games = pgTable(
 		orgId: text("org_id").notNull(),
 		title: text("title").notNull(),
 		messages: jsonb("messages").$type<UIMessage[]>().notNull().default([]),
+		lastEventId: text("last_event_id"),
 		createdAt: timestamp("created_at", { withTimezone: true })
 			.defaultNow()
 			.notNull(),
